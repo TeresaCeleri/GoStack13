@@ -1,25 +1,19 @@
 import { startOfHour } from "date-fns";
+import { getCustomRepository } from 'typeorm';
+
 import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 interface Request {
   provider: string;
   date: Date;
 }
-/*
-dependency inversion - SOLID
-*/
 class CreateAppointmentService {
-  private appointmentsRepository: AppointmentsRepository;
-  
-  constructor(appointmentsRepository: AppointmentsRepository) {
-    this.appointmentsRepository = appointmentsRepository;
-  }
+  public async execute({date, provider}: Request): Promise<Appointment> {
+    const appointmentsRepository = getCustomRepository(AppointmentsRepository);  
 
-  public execute({date, provider}: Request): Appointment {
-    const appointmentDate = startOfHour(date);  
+    const appointmentDate = startOfHour(date);
 
-    //qdo uso findbydate, estou procurando por um unico data
-    const findAppointmentInSameDate = this.appointmentsRepository.findByDate(
+    const findAppointmentInSameDate = await appointmentsRepository.findByDate(
       appointmentDate,
       );
   
@@ -27,11 +21,12 @@ class CreateAppointmentService {
       throw Error('This appointment is already booked')
     }
 
-    //qdo uso create, nao fica claro
-    const appointment = this.appointmentsRepository.create({
+    const appointment = appointmentsRepository.create({
       provider,
       date: appointmentDate,
     });
+
+    await appointmentsRepository.save(appointment);
 
     return appointment;
   }
