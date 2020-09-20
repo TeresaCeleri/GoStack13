@@ -14,25 +14,21 @@ interface IUser {
 }
 
 sessionsRouter.post('/', async (request, response) => {
-  try{
+  const { email, password } = request.body;
 
-    const { email, password } = request.body;
+  const authenticateUser = new AuthenticateUserService();
+  
+  const { user, token } = await authenticateUser.execute({
+      email, 
+      password,
+  });
+  //nova linha
+  const updateUser: IUser = {...user}
+  //linha alterada - delete user.password;
+  delete updateUser.password;
 
-    const authenticateUser = new AuthenticateUserService();
-    
-    const { user, token } = await authenticateUser.execute({
-        email, 
-        password,
-    });
-    //nova linha
-    const updateUser: IUser = {...user}
-    //linha alterada - delete user.password;
-    delete updateUser.password;
+  return response.json( { user, token });
 
-    return response.json( { user, token });
-  } catch (err) {
-    return response.status(400).json({ error: err.message});
-  }
 });
 
 export default sessionsRouter;
