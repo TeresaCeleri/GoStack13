@@ -1,10 +1,19 @@
 import { Router } from 'express';
-import User from '../models/User';
+
 import CreateUserService from '../services/CreateUserService';
 
-import CreateAppUserService from '../services/CreateUserService';
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const usersRouter = Router();
+//nova interface
+interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  password?: string;
+  created_at: Date;
+  updated_at: Date;
+}
 
 usersRouter.post('/', async (request, response) => {
   try{
@@ -16,12 +25,20 @@ usersRouter.post('/', async (request, response) => {
       name, email, password,
     });
 
-    delete user.password;
+    //nova linha
+    const updateUser: IUser = {...user}
+
+    //linha abaixo alterada - delete user.password;
+    delete updateUser.password;
 
     return response.json(user);
   } catch (err) {
     return response.status(400).json({ error: err.message});
   }
+});
+
+usersRouter.patch('./avatar', ensureAuthenticated, async (request, response) => {
+  return response.json({ ok: true });
 });
 
 export default usersRouter;
