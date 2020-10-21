@@ -8,7 +8,7 @@ import {
     ManyToMany, 
     ManyToOne,
     JoinColumn,
-  } from "typeorm";
+  } from "../../../shared/infra/typeorm/node_modules/typeorm";
 
 @Entity('users')
 class User {
