@@ -36,4 +36,54 @@ describe(' AuthenticateUser', () => {
     expect(response).toHaveProperty('token');
     expect(response.user).toEqual(user);
   });
+
+  it('Should not be able to authenticate with non existing user', async () => {
+    //passamos repositorio fake
+    const fakeUsersRepository = new FakeUsersRepository();
+    const fakeHashProvider = new FakeHashProvider();
+    //criamos noso server
+    const authenticateUser = new  AuthenticateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+      );
+
+    //criamos um novo appointment passando
+    const response = await 
+
+    //verificar se está retornando o esperado
+    expect(authenticateUser.execute({
+      email: 'johndoe@exemplo.com',
+      password: '123456',
+    }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('Should not be able to authenticate with wrong password', async () => {
+    //passamos repositorio fake
+    const fakeUsersRepository = new FakeUsersRepository();
+    const fakeHashProvider = new FakeHashProvider();
+    //criamos noso server
+    const createUser = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+      );
+    const authenticateUser = new  AuthenticateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+      );
+
+    await createUser.execute({
+      name: 'John Doe',
+      email: 'johndoe@exemplo.com',
+      password: '123456',
+    });
+
+    //verificar se está retornando o esperado
+    expect(
+      authenticateUser.execute({
+      email: 'johndoe@exemplo.com',
+      password: 'wrong-password',
+    }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
 });
