@@ -1,4 +1,6 @@
 //deletar tudo que está relacionado com typeorm
+import { uuid } from 'uuidv4';
+
 import IUsersRepository from '@modules/users/repositories/IUserRepository';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 
@@ -8,24 +10,33 @@ class UsersRepository implements IUsersRepository {
   private users: User[] = [];
 
   public async findById(id: string): Promise<User | undefined> {
-    const finUser = this.users.find(user => user.id === id);
+    const findUser = this.users.find(user => user.id === id);
 
-    return finUser;
+    return findUser;
   }
 
   public async findByEmail(email: string): Promise<User | undefined> {
-    const finUser = this.users.find(user => user.email === email);
+    const findUser = this.users.find(user => user.email === email);
 
-    return finUser;
+    return findUser;
   }
 
   public async create(userData: ICreateUserDTO): Promise<User> {
+    const user = new User();
 
-    return appointment;
+    Object.assign(user, { id: uuid() }, userData);
+
+    this.users.push(user);
+
+    return user;
   }
 
   public async save(user: User): Promise<User> {
-    return this.ormRepository.save(user);
+    const findIndex = this.users.findIndex(findUser => findUser.id === user.id);
+
+    this.users[findIndex] = user;
+
+    return user;
   }
 
 }
