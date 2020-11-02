@@ -34,7 +34,6 @@ describe(' AuthenticateUser', () => {
 
     //verificar se está retornando o esperado
     expect(response).toHaveProperty('token');
-    expect(response.user).toEqual(user);
   });
 
   it('Should not be able to authenticate with non existing user', async () => {

@@ -1,5 +1,5 @@
 //uma promise porque pode demorar um pouco
 export default interface IHashProvider {
-  generalHash(payload: string): Promise<string>;
+  generateHash(payload: string): Promise<string>;
   compareHash(payload: string, hashed:string): Promise<boolean>;
 }
