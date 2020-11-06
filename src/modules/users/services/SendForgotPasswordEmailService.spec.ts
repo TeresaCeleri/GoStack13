@@ -1,4 +1,4 @@
-//import AppError from '@shared/errors/AppError';
+import AppError from '@shared/errors/AppError';
 
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 import FakeMailProvider from '@shared/container/providers/MailProvider/fakes/FakeMailProvider';
@@ -25,7 +25,6 @@ describe('SendForgotPasswordEmail', () => {
       password: '123456',
     });
 
-
     //criamos um novo appointment passando
     await sendForgotPasswordEmailService.execute({
       email: 'johndoe@exemplo.com',
@@ -33,5 +32,24 @@ describe('SendForgotPasswordEmail', () => {
 
     //verificar se está retornando o esperado
     expect(sendMail).toHaveBeenCalled();
+  });
+
+  it('Should not to able to recover a non-exiting user password', async () => {
+    //passamos repositorio fake
+    const fakeUsersRepository = new FakeUsersRepository();
+    const fakeMailProvider = new FakeMailProvider();
+
+    //criamos nosso server
+    const sendForgotPasswordEmailService = new SendForgotPasswordEmailService(
+      fakeUsersRepository,
+      fakeMailProvider,
+    );
+
+    //verificar se está retornando o esperado
+    await expect(
+      sendForgotPasswordEmailService.execute({
+        email: 'johndoe@exemplo.com',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 });
