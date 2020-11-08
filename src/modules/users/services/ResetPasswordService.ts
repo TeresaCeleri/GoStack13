@@ -2,42 +2,40 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import IUsersRepository from '../repositories/IUserRepository';
-import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 import IUserTokensRepository from '../repositories/IUserTokensRepository';
 
 //import User from '../infra/typeorm/entities/User';
 
 interface IRequest {
-  email: string;
+  token: string,
+  password: string;
 }
 
 @injectable()
-class SendForgotPasswordEmailService {
+class ResetPasswordService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
-
-    @inject('MailProvider')
-    private mailProvider: IMailProvider,
 
     @inject('UserTokensRepository')
     private userTokensRepository: IUserTokensRepository,
 
   ) { }
 
-  public async execute({ email }: IRequest): Promise<void> {
-    const user = await this.usersRepository.findByEmail(email);
+  public async execute({ token, password }: IRequest): Promise<void> {
+    const userToken = await this.userTokensRepository.findByToken(token);
+
+    if (!userToken) {
+      throw new AppError('User token does not exists');
+    }
+    const user = await this.usersRepository.findById(userToken.user_id);
 
     if (!user) {
-      throw new AppError('User does not existing');
+      throw new AppError('User dos not exists');
     }
+    user.password = password;
 
-    await this.userTokensRepository.generate(user.id);
-
-    this.mailProvider.sendMail(
-      email,
-      'Pedido de recuperacao de senha',
-    );
+    await this.usersRepository.save(user);
   }
 }
-export default SendForgotPasswordEmailService;
+export default ResetPasswordService;
