@@ -29,4 +29,4 @@ class FakeUserTokensRepository implements IUsersTokensRepository {
   }
 }
 
-export default FakeUserTokensRepository;
+export default FakeUserTokensRepository
