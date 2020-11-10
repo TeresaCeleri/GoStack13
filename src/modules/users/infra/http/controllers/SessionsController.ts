@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
-
 import { container } from 'tsyringe';
 
 import AuthenticateUserService from '@modules/users/services/AuthenticationUserService';
 
-//nova interface
+//nova interface - dica do forum
 interface IUser {
   id: string;
   name: string;
@@ -24,11 +23,11 @@ export default class SessionsController {
       email,
       password,
     });
-    //nova linha
+    //nova linha - dica do forum
     const updateUser: IUser = { ...user }
     //linha alterada - delete user.password;
     delete updateUser.password;
 
-    return response.json({ user, token }); 
+    return response.json({ user, token });
   }
 }
