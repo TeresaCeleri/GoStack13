@@ -12,6 +12,7 @@ routes.use('/users', usersRouter);
 routes.use('/sessions', sessionsRouter);
 routes.use('/password', passwordRouter);
 
+//rotas da password
 //localhost:3333/password/forgot
 //localhost:3333/password/reset
 
