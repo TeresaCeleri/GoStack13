@@ -17,7 +17,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 //troquei directory por tmpFolder
-app.use('/files', express.static(uploadConfig.tmpFolder));
+//troquei tmpFolder por uploadsFolder
+app.use('/files', express.static(uploadConfig.uploadsFolder));
 app.use(routes);
 
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
