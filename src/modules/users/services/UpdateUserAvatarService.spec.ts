@@ -4,17 +4,23 @@ import FakeStorageProvider from '@shared/container/providers/StorageProvider/fak
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
 import UpdateUserAvatarService from './UpdateUserAvatarService';
 
+let fakeUsersRepository: FakeUsersRepository;
+let fakeStorageProvider: FakeStorageProvider;
+let updateUserAvatar: UpdateUserAvatarService;
+
 describe('UpdateUserAvatar', () => {
-  it('Should be able to create a new user', async () => {
+  beforeEach(() => {
     //passamos repositorio fake
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeStorageProvider = new FakeStorageProvider ();
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeStorageProvider = new FakeStorageProvider();
     //criamos noso server
-    const updateUserAvatar = new UpdateUserAvatarService(
+    updateUserAvatar = new UpdateUserAvatarService(
       fakeUsersRepository,
       fakeStorageProvider,
     );
+  });
 
+  it('Should be able to create a new user', async () => {
     //criamos um novo appointment passando
     const user = await fakeUsersRepository.create({
       name: 'John Doe',
@@ -32,16 +38,8 @@ describe('UpdateUserAvatar', () => {
   });
 
   it('Should not be able to update avatar from non existing user', async () => {
-    //passamos repositorio fake
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeStorageProvider = new FakeStorageProvider ();
-    //criamos noso server
-    const updateUserAvatar = new UpdateUserAvatarService(
-      fakeUsersRepository,
-      fakeStorageProvider,
-    );
     //verificar se está retornando o esperado
-    expect(
+    await expect(
       updateUserAvatar.execute({
         user_id: 'non-existing-user',
         avatarFilename: 'avatar.jpg',
@@ -50,18 +48,8 @@ describe('UpdateUserAvatar', () => {
   });
 
   it('Should delete old avatar when updating new one', async () => {
-    //passamos repositorio fake
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeStorageProvider = new FakeStorageProvider ();
-
     //retorna a função que queremos espionar
     const deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile');
-
-    //criamos noso server
-    const updateUserAvatar = new UpdateUserAvatarService(
-      fakeUsersRepository,
-      fakeStorageProvider,
-    );
 
     //criamos um novo appointment passando
     const user = await fakeUsersRepository.create({
