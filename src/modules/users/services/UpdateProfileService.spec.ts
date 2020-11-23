@@ -75,7 +75,7 @@ describe('UpdateProvile', () => {
       user_id: user.id,
       name: 'John Tre',
       email: 'johntre@exemplo.com',
-      old_password: '123123',
+      old_password: '123456',
       password: '123123',
     });
 
@@ -83,24 +83,40 @@ describe('UpdateProvile', () => {
     expect(updatedUser.password).toBe('123123');
   });
 
-  it('Should be able update the password', async () => {
-    //criamos um novo appointment passando
+  it('Should not be able to update the password without old password', async () => {
     const user = await fakeUsersRepository.create({
       name: 'John Doe',
       email: 'johndoe@exemplo.com',
       password: '123456'
     });
 
-    const updatedUser = await updateProfile.execute({
-      user_id: user.id,
-      name: 'John Tre',
-      email: 'johntre@exemplo.com',
-      old_password: '123123',
-      password: '123123',
+    await expect(
+      updateProfile.execute({
+        user_id: user.id,
+        name: 'John Tre',
+        email: 'johntre@exemplo.com',
+        password: '123123',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('Should not be able to update the password with wrong old password', async () => {
+    //não pode atualizar, se informar a senha antiga errado
+    const user = await fakeUsersRepository.create({
+      name: 'John Doe',
+      email: 'johndoe@exemplo.com',
+      password: '123456'
     });
 
-    //verificar se está retornando o esperado
-    expect(updatedUser.password).toBe('123123');
+    await expect(
+      updateProfile.execute({
+        user_id: user.id,
+        name: 'John Tre',
+        email: 'johntre@exemplo.com',
+        old_password: 'wrong-old-pasword',
+        password: '123123',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 });
 
