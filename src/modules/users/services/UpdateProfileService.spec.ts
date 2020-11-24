@@ -8,7 +8,7 @@ let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let updateProfile: UpdateProfileService;
 
-describe('UpdateProvile', () => {
+describe('UpdateProfile', () => {
   beforeEach(() => {
     //passamos repositorio fake
     fakeUsersRepository = new FakeUsersRepository();
@@ -37,6 +37,17 @@ describe('UpdateProvile', () => {
     //verificar se está retornando o esperado
     expect(updatedUser.name).toBe('John Tre');
     expect(updatedUser.email).toBe('johntre@exemplo.com');
+  });
+
+  it('Should notbe able show the profile from non-existing user', async () => {
+    //criamos um novo appointment passando
+    expect(
+      updateProfile.execute({
+        user_id: 'non-existing-user-id',
+        name: 'test',
+        email: 'test@email.com',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it('Should not be able to change to another user email', async () => {
