@@ -11,6 +11,7 @@ const profileController = new ProfileController();
 //para acessar as rotas tem que estar logado
 profileRouter.use(ensureAuthenticated);
 
+profileRouter.get('/', profileController.show);
 profileRouter.put('/', profileController.update);
 
 export default profileRouter;

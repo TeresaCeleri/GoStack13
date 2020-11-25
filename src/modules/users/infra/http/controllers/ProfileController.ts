@@ -24,6 +24,12 @@ export default class ProfileController {
 
     const user = await showProfile.execute({ user_id });
 
+    //nova linha
+    const updateUser: IUser = { ...user };
+
+    //linha abaixo alterada - delete user.password;
+    delete updateUser.password;
+
     return response.json(user);
   }
 
@@ -42,7 +48,7 @@ export default class ProfileController {
     });
 
     //nova linha
-    const updateUser: IUser = { ...user }
+    const updateUser: IUser = { ...user };
 
     //linha abaixo alterada - delete user.password;
     delete updateUser.password;

@@ -11,7 +11,7 @@
 - Ulitizar Amazon SES para envios em produção;
 - O envio de email deve acontecer em segundo plano blackground job);
 
-**RN** - regra de negócio 
+**RN** - regra de negócio
 - O link enviado por email deve expirar em 2 horas;
 - O usuario precisa confirmar sua senha ao resetar sua senha;
 
@@ -41,6 +41,7 @@
 - A notificação deve ter um status de lida ou não lida para que o prestador possa controlar;
 
 # Agendamento de serviços
+
 **RF** - requisitos funcionais
 - O usuario deve poder listar os prestadores cadastrados;
 - O usuario deve poder listar os dias de um mes com horario disponivel de um prestador;
@@ -49,7 +50,7 @@
 
 ***RNF** - requisitos não funcionais
 - A listagem deve ser armazenda em cache - forma de guardar um resultado para consumir de forma rápida;
-- 
+-
 **RN** - regra de negócio
 - Todo agendamento deve durar 1 hora exatamente;
 - os agendamentos devem estar disponiveis entre 8h e 18h (primeiro as 8h e ultimo as 17h);

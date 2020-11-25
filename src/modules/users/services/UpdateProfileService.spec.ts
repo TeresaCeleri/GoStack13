@@ -13,7 +13,7 @@ describe('UpdateProfile', () => {
     //passamos repositorio fake
     fakeUsersRepository = new FakeUsersRepository();
     fakeHashProvider = new FakeHashProvider();
-    //criamos noso server
+    //criamos nosso server
     updateProfile = new UpdateProfileService(
       fakeUsersRepository,
       fakeHashProvider,
