@@ -1,7 +1,8 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository, Raw } from 'typeorm';
 
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentsDTO';
+import IFinfAllMonthFromProviderDTO from '@modules/appointments/dtos/IFindAllMonthFromProviderDTO';
 
 import Appointment from '../entities/Appointment';
 
@@ -12,12 +13,32 @@ class AppointmentsRepository implements IAppointmentsRepository {
     this.ormRepository = getRepository(Appointment);
   }
 
-  public async findByDate(date: Date): Promise<Appointment | undefined> {// const findAppointment = this.appointments.find(appointment => 
+  public async findByDate(date: Date): Promise<Appointment | undefined> {// const findAppointment = this.appointments.find(appointment =>
     const findAppointment = await this.ormRepository.findOne({
       where: { date },
     });
 
     return findAppointment;
+  }
+
+  public async findAllMonthFromProvider({
+    provider_id,
+    month,
+    year
+  }: IFinfAllMonthFromProviderDTO): Promise<Appointment[]> {
+    //para colocar o mes sempre com 2 digitos
+    const parsedMonth = String(month).padStart(2, '0');
+
+    const appointments = await this.ormRepository.find({
+      where: {
+        provider_id,
+        date: Raw(dateFieldName =>
+          `to_char(${dateFieldName}, 'MM-YYYY') = '${parsedMonth}-${year}'`,
+        ),
+      },
+    });
+
+    return appointments;
   }
 
   public async create({ provider_id, date }: ICreateAppointmentDTO): Promise<Appointment> {
