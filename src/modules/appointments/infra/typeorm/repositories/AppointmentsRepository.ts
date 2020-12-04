@@ -2,7 +2,7 @@ import { getRepository, Repository, Raw } from 'typeorm';
 
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentsDTO';
-import IFinfAllMonthFromProviderDTO from '@modules/appointments/dtos/IFindAllMonthFromProviderDTO';
+import IFindAllMonthFromProviderDTO from '@modules/appointments/dtos/IFindAllMonthFromProviderDTO';
 
 import Appointment from '../entities/Appointment';
 
@@ -25,7 +25,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
     provider_id,
     month,
     year
-  }: IFinfAllMonthFromProviderDTO): Promise<Appointment[]> {
+  }: IFindAllMonthFromProviderDTO): Promise<Appointment[]> {
     //para colocar o mes sempre com 2 digitos
     const parsedMonth = String(month).padStart(2, '0');
 
